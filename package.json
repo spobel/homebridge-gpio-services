@@ -1,0 +1,33 @@
+{
+  "name": "homebridge-gpio-valve",
+  "version": "0.0.1",
+  "description": "Raspberry Pi GPIO plugin for valve accessories for Homebridge: https://github.com/nfarina/homebridge",
+  "main": "index.js",
+  "keywords": [
+    "homebridge-plugin",
+    "homebridge-plugin-valve",
+    "valve",
+    "sprinkler",
+    "faucet",
+    "shower-head"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spobel/homebridge-gpio-valve.git"
+  },
+  "author": {
+    "name": "Sebastian Pobel"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "rpio": "^0.9.20",
+    "json-fs": "^1.1.1"
+  },
+  "bugs": {
+    "url": "https://github.com/spobel/homebridge-gpio-valve/issues"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.2.0"
+  }
+}
