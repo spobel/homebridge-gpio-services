@@ -9,6 +9,7 @@ module.exports = function(homebridge) {
     Characteristic = homebridge.hap.Characteristic;
     Persistence = homebridge.user.persistPath();
     UUIDGen = homebridge.hap.uuid;
+
     return GPIOValve;
 };
 
@@ -92,28 +93,43 @@ GPIOValve.prototype.initService = function () {
         require(this.persistenceFile).setDuration : 300);
 
     this.isConfigured = this.service.addCharacteristic(Characteristic.IsConfigured);
-    this.isConfigured.on('change', (function () {
-        this.log("isConf:" + this.isConfigured.value)
-    }).bind(this));
+    this.isConfigured.on('change', this.changeIsConfigured.bind(this));
+    this.isConfigured.on('get', this.getIsConfigured.bind(this));
+
+    this.serviceLabelIndex = this.service.addCharacteristic(Characteristic.ServiceLabelIndex);
+    this.serviceLabelIndex.updateValue({start:"16:00",stop:"17:00"});
+
+    this.statusFault = this.service.addCharacteristic(Characteristic.StatusFault);
 
     this.log("GPIOValve listen to pin: " + this.pin);
 }
 
 GPIOValve.prototype.changeActive = function () {
+    this.statusFault.updateValue(1);
     if (this.active.value) {
         this.openValve();
-        this.startTimer(this.setDuration.value);
+
         this.inUse.updateValue(1);
+        this.startTimer(this.setDuration.value);
     } else {
         this.closeValve();
-        this.startTimer(0);
         this.inUse.updateValue(0);
+        this.startTimer(0);
     }
 }
 
-GPIOValve.prototype.getRemainingDuration = function (callback) {
-    var remaining = this.timerDate != null ? (this.setDuration.value - (((new Date()).getTime() - this.timerDate) / 1000)) : 0;
-    return callback(null, remaining);
+GPIOValve.prototype.changeIsConfigured = function () {
+    this.log("change isconf value: " + this.isConfigured.value);
+}
+
+GPIOValve.prototype.getIsConfigured = function (callback) {
+    this.log("get isconf value: " + this.isConfigured.value);
+    return callback(null, this.isConfigured.value);
+}
+
+GPIOValve.prototype.setIsConfigured = function () {
+    this.log("set isconf value: " + this.isConfigured.value);
+
 }
 
 GPIOValve.prototype.changeSetDuration = function () {
@@ -123,6 +139,11 @@ GPIOValve.prototype.changeSetDuration = function () {
     if (this.inUse.value) {
         this.startTimer(this.setDuration.value);
     }
+}
+
+GPIOValve.prototype.getRemainingDuration = function (callback) {
+    var remaining = this.timerDate != null ? (this.setDuration.value - (((new Date()).getTime() - this.timerDate) / 1000)) : 0;
+    return callback(null, remaining);
 }
 
 GPIOValve.prototype.startTimer = function (remaining) {

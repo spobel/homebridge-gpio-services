@@ -1,5 +1,7 @@
-const GPIOValve = require("./gpiovalve.js");
-
 module.exports = function (homebridge) {
-    homebridge.registerAccessory("homebridge-gpio-valve", "GPIOValve", GPIOValve(homebridge), true);
+    var GPIOValve = require("./gpiovalve.js");
+    var IrrigationSystem = require("./irrigationsystem.js");
+
+    homebridge.registerAccessory("homebridge-gpio-valve", "GPIO-Valve-Accessory", GPIOValve(homebridge), true);
+    homebridge.registerAccessory("homebridge-gpio-valve", "GPIO-Valve-Irrigation-System", IrrigationSystem(homebridge), true);
 }

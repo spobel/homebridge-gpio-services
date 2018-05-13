@@ -1,0 +1,35 @@
+{
+  "bridge": {
+    "name": "Homebridge",
+    "username": "CC:22:3D:E3:CE:30",
+    "port": 51827,
+    "pin": "031-46-154"
+  },
+  "description": "This is an example configuration file with one fake accessory and one fake platform. You can use this as a template for creating your own configuration file containing devices you actually own.",
+  "accessories": [
+    {
+      "accessory": "GPIO-Valve-Accessory",
+      "name": "Sprinkler GPIO 1",
+      "pin": 1,
+      "valveType": "Sprinkler"
+    }, {
+      "accessory": "GPIO-Valve-Accessory",
+      "name": "Faucet GPIO 2",
+      "pin": 2,
+      "valveType": "Faucet"
+    }, {
+      "accessory": "GPIO-Valve-Accessory",
+      "name": "ShowerHead GPIO 3",
+      "pin": 3,
+      "valveType": "ShowerHead"
+    }, {
+      "accessory": "GPIO-Valve-Accessory",
+      "name": "GenericValve GPIO 4",
+      "pin": 4,
+      "valveType": "GenericValve"
+    }, {
+      "accessory": "GPIO-Valve-Irrigation-System",
+      "name": "IrrigationSys"
+    }
+  ]
+}
