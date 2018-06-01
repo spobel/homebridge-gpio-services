@@ -1,7 +1,13 @@
 module.exports = function (homebridge) {
-    var GPIOValve = require("./gpiovalve.js");
-    var IrrigationSystem = require("./irrigationsystem.js");
+    let Valve = require("./valve.js");
+    let PersistenceValve = require("./persistence.js");
+    homebridge.registerAccessory(
+        "homebridge-gpio-valve",
+        "GPIO-Valve-Service",
+        Valve(homebridge, PersistenceValve),
+        true);
 
-    homebridge.registerAccessory("homebridge-gpio-valve", "GPIO-Valve-Accessory", GPIOValve(homebridge), true);
-    homebridge.registerAccessory("homebridge-gpio-valve", "GPIO-Valve-Irrigation-System", IrrigationSystem(homebridge), true);
+    //let IrrigationSystem = require("./irrigationsystem.js");
+    //let PersistenceIrrigationSystem = require("./persistence.js");
+    //homebridge.registerAccessory("homebridge-gpio-valve", "GPIO-IrrigationSystem-Service", IrrigationSystem(homebridge, PersistenceIrrigationSystem), true);
 }

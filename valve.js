@@ -1,57 +1,41 @@
-var Accessory, Service, Characteristic, Persistence, UUIDGen;
+let Accessory, Service, Characteristic, UUIDGen;
+let Persistence;
 
 //const rpio = require("rpio");
 const fs = require('fs');
 
-module.exports = function(homebridge) {
+module.exports = function (homebridge, persistence) {
     Accessory = homebridge.platformAccessory;
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
-    Persistence = homebridge.user.persistPath();
     UUIDGen = homebridge.hap.uuid;
 
-    return GPIOValve;
+    Persistence = new persistence(homebridge.user.persistPath() + "/homebridge-gpio-valve_cache.json");
+
+    return Valve;
 };
 
-function persistence_exist(file) {
-    try {
-        return require(file).setDuration;
-    } catch (e) {
-        return false
-    }
+function Valve(log, config) {
+    this.log = log;
+    this.config = config;
+    this.version = require("./package.json").version;
+
+    this.name = this.config.name;
+    this.pin = this.config.pin;
+    this.valveType = this.config.valveType;
+
+    this.automationDatetime = this.config.automationDatetime;
+    this.automationDuration = this.config.automationDuration || 300;
+    this.configurationFlag = this.automationDatetime !== undefined;
+
+    this.initService();
 }
 
-function persistence_create(file, newSetDuration) {
-    const content = JSON.stringify({setDuration: newSetDuration});
-    fs.writeFile(file, content, 'utf8', function (err) {
-        if (err) {
-            return console.log(err);
-        }
-    });
-}
-
-function GPIOValve(log, config) {
-        this.log = log;
-        this.config = config;
-        this.version = require("./package.json").version;
-
-        this.name = config.name;
-        this.pin = config.pin;
-        this.valveType = config.valveType;
-
-        this.persistenceFile = Persistence + "/" + this.name + "_cache.json";
-
-        this.timerDate;
-        this.timer;
-
-        this.initService();
-}
-
-GPIOValve.prototype.getServices = function () {
+Valve.prototype.getServices = function () {
     return [this.informationService, this.service];
-}
+};
 
-GPIOValve.prototype.initService = function () {
+Valve.prototype.initService = function () {
     this.informationService = new Service.AccessoryInformation();
     this.informationService
         .setCharacteristic(Characteristic.Manufacturer, "Sebastian Pobel")
@@ -61,6 +45,8 @@ GPIOValve.prototype.initService = function () {
 
     this.service = new Service.Valve(this.name);
     this.service.isPrimaryService = true;
+
+    let savedValve = Persistence.getValve(this);
 
     switch (this.valveType) {
         case "Faucet":
@@ -88,27 +74,23 @@ GPIOValve.prototype.initService = function () {
     this.remainingDuration.on('get', this.getRemainingDuration.bind(this));
 
     this.setDuration = this.service.addCharacteristic(Characteristic.SetDuration);
+    this.setDuration.updateValue((savedValve !== undefined && savedValve.setDuration !== undefined) ?
+        savedValve.setDuration : 300);
     this.setDuration.on('change', this.changeSetDuration.bind(this));
-    this.setDuration.updateValue(persistence_exist(this.persistenceFile) ?
-        require(this.persistenceFile).setDuration : 300);
 
-    this.isConfigured = this.service.addCharacteristic(Characteristic.IsConfigured);
-    this.isConfigured.on('change', this.changeIsConfigured.bind(this));
-    this.isConfigured.on('get', this.getIsConfigured.bind(this));
+    if (this.configurationFlag) {
+        this.isConfigured = this.service.addCharacteristic(Characteristic.IsConfigured);
+        this.isConfigured.updateValue((savedValve !== undefined && savedValve.isConfigured !== undefined) ?
+            savedValve.isConfigured : false);
+        this.isConfigured.on('get', this.getIsConfigured.bind(this));
+    }
 
-    this.serviceLabelIndex = this.service.addCharacteristic(Characteristic.ServiceLabelIndex);
-    this.serviceLabelIndex.updateValue({start:"16:00",stop:"17:00"});
+    this.log("Valve listen to pin: " + this.pin);
+};
 
-    this.statusFault = this.service.addCharacteristic(Characteristic.StatusFault);
-
-    this.log("GPIOValve listen to pin: " + this.pin);
-}
-
-GPIOValve.prototype.changeActive = function () {
-    this.statusFault.updateValue(1);
+Valve.prototype.changeActive = function () {
     if (this.active.value) {
         this.openValve();
-
         this.inUse.updateValue(1);
         this.startTimer(this.setDuration.value);
     } else {
@@ -116,58 +98,54 @@ GPIOValve.prototype.changeActive = function () {
         this.inUse.updateValue(0);
         this.startTimer(0);
     }
-}
+};
 
-GPIOValve.prototype.changeIsConfigured = function () {
-    this.log("change isconf value: " + this.isConfigured.value);
-}
+Valve.prototype.changeIsConfigured = function () {
+        this.isConfigured.updateValue(this.isConfigured.value);
 
-GPIOValve.prototype.getIsConfigured = function (callback) {
-    this.log("get isconf value: " + this.isConfigured.value);
-    return callback(null, this.isConfigured.value);
-}
+    Persistence.saveValve(this);
+};
 
-GPIOValve.prototype.setIsConfigured = function () {
-    this.log("set isconf value: " + this.isConfigured.value);
-
-}
-
-GPIOValve.prototype.changeSetDuration = function () {
+Valve.prototype.changeSetDuration = function () {
     this.log("Set Duration to: " + this.setDuration.value + "seconds.");
-    persistence_create(this.persistenceFile, this.setDuration.value);
+    Persistence.saveValve(this);
 
     if (this.inUse.value) {
         this.startTimer(this.setDuration.value);
     }
-}
+};
 
-GPIOValve.prototype.getRemainingDuration = function (callback) {
-    var remaining = this.timerDate != null ? (this.setDuration.value - (((new Date()).getTime() - this.timerDate) / 1000)) : 0;
-    return callback(null, remaining);
-}
+Valve.prototype.getIsConfigured = function (callback) {
+    this.log("get" + this.isConfigured.value);
+    return callback(null, this.isConfigured.value);
+};
 
-GPIOValve.prototype.startTimer = function (remaining) {
+Valve.prototype.getRemainingDuration = function (callback) {
+    return callback(null, this.timerDate != null ?
+        (this.setDuration.value - (((new Date()).getTime() - this.timerDate) / 1000)) : 0);
+};
+
+Valve.prototype.startTimer = function (remaining) {
     this.remainingDuration.updateValue(remaining);
 
     this.timerDate = (new Date()).getTime();
     clearTimeout(this.timer);
 
+    this.log("Timer stops in " + remaining + "seconds.")
     this.timer = setTimeout(() => {
         this.timerDate = null;
         this.active.updateValue(0);
     }, remaining * 1000);
+};
 
-    this.log("Timer stops in " + remaining + "seconds.")
-}
-
-GPIOValve.prototype.openValve = function () {
+Valve.prototype.openValve = function () {
     this.log("opening...");
     //todo gpio open
     this.log("opened");
-}
+};
 
-GPIOValve.prototype.closeValve = function () {
+Valve.prototype.closeValve = function () {
     this.log("closing...");
     //todo gpio close
     this.log("closed");
-}
+};
