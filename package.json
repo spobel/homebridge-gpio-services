@@ -20,7 +20,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "rpio": "^0.9.20",
+    "rpio": "^0.9.22",
     "json-fs": "^1.1.1"
   },
   "bugs": {

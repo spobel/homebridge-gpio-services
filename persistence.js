@@ -1,9 +1,4 @@
-let Accessory, Service, Characteristic, UUIDGen;
-
-//const rpio = require("rpio");
 const fs = require('fs');
-
-
 
 function Persistence(file) {
     console.log("File: " + file);
@@ -22,8 +17,8 @@ Persistence.prototype.getValve = function (that) {
 Persistence.prototype.saveValve = function (that) {
     let currentValve = {
         name: that.name,
-        setDuration: that.setDuration.value,
-        isConfigured: that.isConfigured.value
+        manualDuration: that.manualDuration,
+        isConfigured: that.isConfigured
     };
 
     let tmp = this.savedValves.filter(item => (item.name === that.name));
@@ -41,8 +36,6 @@ Persistence.prototype.save = function () {
     fs.writeFile(this.persistenceFile, JSON.stringify(toSave), 'utf8', function (err) {
         if (err) {
             return console.log(err);
-        } else {
-            console.log("saved");
         }
     });
 };
