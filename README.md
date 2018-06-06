@@ -1,1 +1,1 @@
-# homebridge-gpio-valve
+# homebridge-gpio-valve-outlet

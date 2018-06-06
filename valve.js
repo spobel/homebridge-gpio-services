@@ -10,7 +10,7 @@ module.exports = function (homebridge, persistence) {
     Characteristic = homebridge.hap.Characteristic;
     UUIDGen = homebridge.hap.uuid;
 
-    Persistence = new persistence(homebridge.user.persistPath() + "/homebridge-gpio-valve_cache.json");
+    Persistence = new persistence(homebridge.user.persistPath() + "/homebridge-gpio-valve-outlet_cache.json");
 
     return Valve;
 };
