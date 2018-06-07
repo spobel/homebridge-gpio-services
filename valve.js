@@ -120,9 +120,10 @@ Valve.prototype.initService = function () {
 
 Valve.prototype.changeActive = function () {
     if (this.hap.active.value) {
+        this.manualStart = true;
         this.openValve();
         this.hap.inUse.updateValue(1);
-        this.startTimer(this.manualDuration, true);
+        this.startTimer(this.manualDuration);
     } else {
         this.closeValve();
         this.hap.inUse.updateValue(0);
@@ -149,7 +150,8 @@ Valve.prototype.changeSetDuration = function () {
 
     if (this.hap.inUse.value) {
         this.log("Resetting Timer.");
-        this.startTimer(this.manualDuration, true);
+        this.manualStart = true;
+        this.startTimer(this.manualDuration);
     }
 };
 
@@ -159,18 +161,17 @@ Valve.prototype.getRemainingDuration = function (callback) {
         (currentDuration - (((new Date()).getTime() - this.timerDate) / 1000)) : 0);
 };
 
-Valve.prototype.startTimer = function (remaining, manualStart) {
-    this.manualStart = manualStart;
+Valve.prototype.startTimer = function (remaining) {
     this.hap.remainingDuration.updateValue(remaining);
 
     this.timerDate = (new Date()).getTime();
     clearTimeout(this.timer);
 
-    this.log("Timer stops in " + remaining + "seconds.");
+    this.log("stops in " + remaining + "seconds.");
     this.timer = setTimeout(() => {
-            this.log("Timer stopped.");
+            this.log("Stopped by Timer.");
             this.timerDate = null;
-            this.hap.active.updateValue(0);
+            this.hap.inUse.updateValue(0);
         }, remaining * 1000);
 };
 
@@ -192,15 +193,13 @@ Valve.prototype.interruptTimer = function () {
 // }
 
 Valve.prototype.openValve = function () {
-    this.log("opening...");
     this.gpioValve.writeSync(((!this.invertHighLow)? Gpio.HIGH : Gpio.LOW));
-    this.log("opened");
+    this.log("opened.");
 };
 
 Valve.prototype.closeValve = function () {
-    this.log("closing...");
     this.gpioValve.writeSync(((!this.invertHighLow)? Gpio.LOW : Gpio.HIGH));
-    this.log("closed");
+    this.log("closed.");
 };
 
 Valve.prototype.initGPIO = function () {

@@ -1,7 +1,6 @@
 const fs = require('fs');
 
 function Persistence(file) {
-    console.log("File: " + file);
     this.persistenceFile = file;
     try {
         this.savedValves = require(this.persistenceFile).valves;
