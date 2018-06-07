@@ -9,24 +9,35 @@
   "accessories": [
     {
       "accessory": "GPIO-Valve-Service",
-      "name": "Sprinkler GPIO 1",
+      "name": "Sprinkler GPIO1",
       "pin": 1,
       "valveType": "Sprinkler"
     }, {
       "accessory": "GPIO-Valve-Service",
-      "name": "Faucet GPIO 2",
+      "name": "Faucet GPIO2",
       "pin": 2,
-      "valveType": "Faucet"
+      "valveType": "Faucet",
+      "manualDuration": 600
     }, {
       "accessory": "GPIO-Valve-Service",
-      "name": "ShowerHead GPIO 3",
+      "name": "ShowerHead GPIO3",
       "pin": 3,
       "valveType": "ShowerHead"
     }, {
       "accessory": "GPIO-Valve-Service",
-      "name": "GenericValve GPIO 4",
+      "name": "GenericValve GPIO4",
       "pin": 4,
-      "valveType": "GenericValve"
+      "valveType": "GenericValve",
+      "invertHighLow": true
+    }, {
+      "accessory": "GPIO-Switch-Service",
+      "name": "GenericValve GPIO5",
+      "pin": 5,
+    }, {
+      "accessory": "GPIO-Switch-Service",
+      "name": "GenericValve GPIO6",
+      "pin": 6,
+      "invertHighLow": true
     }
   ]
 }

@@ -2,7 +2,6 @@ let Accessory, Service, Characteristic, UUIDGen;
 let Persistence;
 
 const Gpio = require("onoff").Gpio;
-const fs = require('fs');
 
 module.exports = function (homebridge, persistence) {
     Accessory = homebridge.platformAccessory;
@@ -33,8 +32,9 @@ Valve.prototype.getServices = function () {
 Valve.prototype.loadConfiguration = function () {
     this.name = this.config.name;
     this.pin = this.config.pin;
-    this.log("Pin: " + this.pin);
+    this.log("GPIO" + this.pin);
     this.invertHighLow = this.config.invertHighLow || false;
+    this.log("invert: " + this.invertHighLow);
     this.valveType = this.config.valveType;
     this.manualStart = true;
 
@@ -71,7 +71,7 @@ Valve.prototype.initService = function () {
     this.informationService
         .setCharacteristic(Characteristic.Manufacturer, "Sebastian Pobel")
         .setCharacteristic(Characteristic.Model, "GPIO " + this.valveType)
-        .setCharacteristic(Characteristic.SerialNumber, "GPIO Pin: " + this.pin)
+        .setCharacteristic(Characteristic.SerialNumber, "Pin: GPIO" + this.pin)
         .setCharacteristic(Characteristic.FirmwareRevision, this.version);
 
     this.service = new Service.Valve(this.name);
@@ -115,7 +115,7 @@ Valve.prototype.initService = function () {
     //     this.automationStarter();
     // }
 
-    this.log("Valve services initialized.");
+    this.log("Valve service initialized.");
 };
 
 Valve.prototype.changeActive = function () {
@@ -137,8 +137,7 @@ Valve.prototype.changeIsConfigured = function () {
 
     this.savePersistence();
 
-    let status = (this.isConfigured)? "enabled" : "disabled";
-    this.log("Automatic start at " + this.automationHours + ":" + this.automationMinutes + " is " + status + ".");
+    this.log("Automatic start at " + this.automationHours + ":" + this.automationMinutes + " is " + (this.isConfigured? "enabled" : "disabled") + ".");
 };
 
 Valve.prototype.changeSetDuration = function () {
@@ -194,16 +193,17 @@ Valve.prototype.interruptTimer = function () {
 
 Valve.prototype.openValve = function () {
     this.log("opening...");
-    this.gpioValve.writeSync((this.invertHighLow ? 1 : 0));
+    this.gpioValve.writeSync(((!this.invertHighLow)? Gpio.HIGH : Gpio.LOW));
     this.log("opened");
 };
 
 Valve.prototype.closeValve = function () {
     this.log("closing...");
-    this.gpioValve.writeSync((this.invertHighLow ? 0 : 1));
+    this.gpioValve.writeSync(((!this.invertHighLow)? Gpio.LOW : Gpio.HIGH));
     this.log("closed");
 };
 
 Valve.prototype.initGPIO = function () {
-    this.gpioValve = new Gpio(this.pin, (this.invertHighLow ? 'low' : 'high'));
+    this.gpioValve = new Gpio(this.pin, 'out');
+    this.gpioValve.writeSync(((!this.invertHighLow)? Gpio.LOW : Gpio.HIGH));
 };
