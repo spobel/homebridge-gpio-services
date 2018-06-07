@@ -1,7 +1,7 @@
 let Accessory, Service, Characteristic, UUIDGen;
 let Persistence;
 
-const rpio = require("rpio");
+const Gpio = require("onoff").Gpio;
 const fs = require('fs');
 
 module.exports = function (homebridge, persistence) {
@@ -10,7 +10,7 @@ module.exports = function (homebridge, persistence) {
     Characteristic = homebridge.hap.Characteristic;
     UUIDGen = homebridge.hap.uuid;
 
-    Persistence = new persistence(homebridge.user.persistPath() + "/homebridge-gpio-valve-outlet_cache.json");
+    Persistence = new persistence(homebridge.user.persistPath() + "/homebridge-gpio-services_cache.json");
 
     return Valve;
 };
@@ -22,7 +22,7 @@ function Valve(log, config) {
 
     this.loadConfiguration();
     this.loadPersistence();
-    rpio.open(this.pin, rpio.OUTPUT, rpio.LOW);
+    this.initGPIO();
     this.initService();
 }
 
@@ -34,8 +34,9 @@ Valve.prototype.loadConfiguration = function () {
     this.name = this.config.name;
     this.pin = this.config.pin;
     this.log("Pin: " + this.pin);
+    this.invertHighLow = this.config.invertHighLow || false;
     this.valveType = this.config.valveType;
-
+    this.manualStart = true;
 
     this.configurationFlag = this.config.automationDatetime !== undefined;
     if (this.configurationFlag) {
@@ -141,14 +142,14 @@ Valve.prototype.changeIsConfigured = function () {
 };
 
 Valve.prototype.changeSetDuration = function () {
-    this.manualDuration = this.hap.setDuration.value
+    this.manualDuration = this.hap.setDuration.value;
 
     this.log("Set Duration to: " + this.manualDuration + "seconds.");
 
     this.savePersistence();
 
     if (this.hap.inUse.value) {
-        this.log("Resetting Timer.")
+        this.log("Resetting Timer.");
         this.startTimer(this.manualDuration, true);
     }
 };
@@ -156,7 +157,7 @@ Valve.prototype.changeSetDuration = function () {
 Valve.prototype.getRemainingDuration = function (callback) {
     let currentDuration = (this.manualStart) ? this.manualDuration : this.automationDuration;
     return callback(null, this.timerDate != null ?
-        (this.currentDuration - (((new Date()).getTime() - this.timerDate) / 1000)) : 0);
+        (currentDuration - (((new Date()).getTime() - this.timerDate) / 1000)) : 0);
 };
 
 Valve.prototype.startTimer = function (remaining, manualStart) {
@@ -168,6 +169,7 @@ Valve.prototype.startTimer = function (remaining, manualStart) {
 
     this.log("Timer stops in " + remaining + "seconds.");
     this.timer = setTimeout(() => {
+            this.log("Timer stopped.");
             this.timerDate = null;
             this.hap.active.updateValue(0);
         }, remaining * 1000);
@@ -192,12 +194,16 @@ Valve.prototype.interruptTimer = function () {
 
 Valve.prototype.openValve = function () {
     this.log("opening...");
-    rpio.write(this.pin, rpio.HIGH);
+    this.gpioValve.writeSync((this.invertHighLow ? 1 : 0));
     this.log("opened");
 };
 
 Valve.prototype.closeValve = function () {
     this.log("closing...");
-    rpio.write(this.pin, rpio.LOW);
+    this.gpioValve.writeSync((this.invertHighLow ? 0 : 1));
     this.log("closed");
+};
+
+Valve.prototype.initGPIO = function () {
+    this.gpioValve = new Gpio(this.pin, (this.invertHighLow ? 'low' : 'high'));
 };

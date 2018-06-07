@@ -1,11 +1,10 @@
 {
-  "name": "homebridge-gpio-valve-outlet",
+  "name": "homebridge-gpio-services",
   "version": "0.0.1",
   "description": "Raspberry Pi GPIO plugin for valve accessories for Homebridge: https://github.com/nfarina/homebridge",
   "main": "index.js",
   "keywords": [
     "homebridge-plugin",
-    "homebridge-plugin-valve-outlet",
     "valve",
     "sprinkler",
     "faucet",
@@ -13,18 +12,18 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/spobel/homebridge-gpio-valve-outlet.git"
+    "url": "https://github.com/spobel/homebridge-gpio-services.git"
   },
   "author": {
     "name": "Sebastian Pobel"
   },
   "license": "ISC",
   "dependencies": {
-    "rpio": "^0.9.22",
+    "onoff": "^3.1.0",
     "json-fs": "^1.1.1"
   },
   "bugs": {
-    "url": "https://github.com/spobel/homebridge-gpio-valve-outlet/issues"
+    "url": "https://github.com/spobel/homebridge-gpio-services/issues"
   },
   "engines": {
     "node": ">=0.12.0",
