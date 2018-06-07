@@ -51,8 +51,9 @@ Valve.prototype.loadConfiguration = function () {
 };
 
 Valve.prototype.loadPersistence = function () {
-    let savedValve = Persistence.getValve(this);
+    let savedValve = Persistence.getValve(this)[0];
     if (savedValve !== undefined) {
+        this.log(savedValve.isConfigured);
         if (savedValve.isConfigured !== undefined) {
             this.isConfigured = savedValve.isConfigured;
         }

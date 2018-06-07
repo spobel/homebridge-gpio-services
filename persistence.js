@@ -10,7 +10,7 @@ function Persistence(file) {
 }
 
 Persistence.prototype.getValve = function (that) {
-    return this.savedValves.filter(item => (item.name === that.name));
+    return this.savedValves.filter(item => (item.name == that.name));
 };
 
 Persistence.prototype.saveValve = function (that) {
