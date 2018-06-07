@@ -38,6 +38,16 @@
       "name": "GenericValve GPIO6",
       "pin": 6,
       "invertHighLow": true
+    }, {
+      "accessory": "GPIO-PushButton-Service",
+      "name": "GenericValve GPIO7",
+      "pin": 7
+    }, {
+      "accessory": "GPIO-PushButton-Service",
+      "name": "GenericValve GPIO8",
+      "pin": 8,
+      "invertHighLow": true,
+      "invokeTimeout": 1000
     }
   ]
 }
