@@ -33,6 +33,10 @@
       "accessory": "GPIO-Switch-Service",
       "name": "GenericValve GPIO5",
       "pin": 5,
+      "manualDuration": 1800,
+      "automationDateTime": "00:01",
+      "automationDuration": 600,
+      "isAutomationActive": true
     }, {
       "accessory": "GPIO-Switch-Service",
       "name": "GenericValve GPIO6",

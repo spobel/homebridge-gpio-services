@@ -17,7 +17,7 @@ Persistence.prototype.saveValve = function (that) {
     let currentValve = {
         name: that.name,
         manualDuration: that.manualDuration,
-        isConfigured: that.isConfigured
+        isAutomationActive: that.isAutomationActive
     };
 
     let tmp = this.savedValves.filter(item => (item.name === that.name));

@@ -39,8 +39,8 @@ Switch.prototype.initService = function () {
     this.informationService = new Service.AccessoryInformation();
     this.informationService
         .setCharacteristic(Characteristic.Manufacturer, "Sebastian Pobel")
-        .setCharacteristic(Characteristic.Model, "GPIO Switch")
-        .setCharacteristic(Characteristic.SerialNumber, "Pin: GPIO" + this.pin)
+        .setCharacteristic(Characteristic.Model, "GPIO-Switch-Service")
+        .setCharacteristic(Characteristic.SerialNumber, "GPIO" + this.pin)
         .setCharacteristic(Characteristic.FirmwareRevision, this.version);
 
     this.service = new Service.Switch(this.name);

@@ -6,13 +6,16 @@ Use config.json for examples.
 
 Use this accessory for Valve outlets. For example sprinklers.
 
-| Attribute    | Type   | Default        | Description 
-|--------------|--------|----------------|-------------
-|name          | string | -              | Name of Accessory
-|pin           | int    | -              | GPIO pin number. 
-|invertHighLow | bool   | false          | Set to true if outlet has to be inverted.
-|valveType     | string | "GenericValve" | Sets type of Accessory. <br>("Faucet"\|"ShowerHead"\|"Sprinkler"\|"GenericValve")
-|manualDuration| int    | 300            | Time in Seconds. Default: 300 => 5min <br> (300\|600\|900\|1200\|1500\|1800\|2100\|2400\|2700\|3000\|3300\|3600)
+| Attribute        | Type   | Default        | Description 
+|------------------|--------|----------------|-------------
+|name              | string | -              | Name of Accessory
+|pin               | int    | -              | GPIO pin number. 
+|invertHighLow     | bool   | false          | Set to true if outlet has to be inverted.
+|valveType         | string | "GenericValve" | Sets type of Accessory. <br>("Faucet"\|"ShowerHead"\|"Sprinkler"\|"GenericValve")
+|manualDuration    | int    | 300            | Time in Seconds. Default: 300 => 5min <br>(300\|600\|900\|1200\|1500\|1800\|2100\|2400\|2700\|3000\|3300\|3600)
+|automationDateTime| string | -              | DateTime for automated irrigation. <br> Format: "HH:MM" <br> Example: 0:00 -> "00:00" 
+|automationDuration| int    | 300            | Time in Seconds for automated irrigation. <br>Default: 300 => 5min <br>(300\|600\|900\|1200\|1500\|1800\|2100\|2400\|2700\|3000\|3300\|3600)
+|isAutomationActive| bool   | false          | Activates automatic irrigation.
 
 ## GPIO-Switch-Service
 
@@ -37,7 +40,6 @@ Use this accessory for push button. Switch will turn off after invokeTimeout.
 
 ## Next Features
 
-* GPIO-Valve-Service: start at specific DateTime will be added
 * GPIO-GarageDoorOpener-Service: new Service
 * GPIO-Doorbell-Service: new Service
 * GPIO-ContactSensor-Service: new Service
