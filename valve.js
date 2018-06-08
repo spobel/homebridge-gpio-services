@@ -1,15 +1,16 @@
 let Accessory, Service, Characteristic, UUIDGen;
-let Persistence;
+let Persistence, Identifier;
 
 const Gpio = require("onoff").Gpio;
 
-module.exports = function (homebridge, persistence) {
+module.exports = function (homebridge, persistence, identifier) {
     Accessory = homebridge.platformAccessory;
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
     UUIDGen = homebridge.hap.uuid;
 
     Persistence = new persistence(homebridge.user.persistPath() + "/homebridge-gpio-services_cache.json");
+    Identifier = identifier;
 
     return Valve;
 };
@@ -20,11 +21,13 @@ function Valve(log, config) {
     this.version = require("./package.json").version;
 
     this.loadConfiguration();
+
     this.loadPersistence();
 
     this.currentDuration = this.manualDuration;
 
     this.initGPIO();
+
     this.initService();
 }
 
@@ -38,7 +41,6 @@ Valve.prototype.loadConfiguration = function () {
     this.log("GPIO" + this.pin);
     this.invertHighLow = this.config.invertHighLow || false;
     this.valveType = this.config.valveType;
-    this.manualStart = true;
 
     this.configurationFlag = this.config.automationDatetime !== undefined;
     if (this.configurationFlag) {
@@ -54,9 +56,6 @@ Valve.prototype.loadConfiguration = function () {
 Valve.prototype.loadPersistence = function () {
     let savedValve = Persistence.getValve(this)[0];
     if (savedValve !== undefined) {
-        // if (savedValve.isAutomationActive !== undefined) {
-        //     this.isAutomationActive = savedValve.isAutomationActive;
-        // }
         if (savedValve.manualDuration !== undefined) {
             this.manualDuration = savedValve.manualDuration;
         }
@@ -71,7 +70,7 @@ Valve.prototype.initService = function () {
     this.informationService = new Service.AccessoryInformation();
     this.informationService
         .setCharacteristic(Characteristic.Manufacturer, "Sebastian Pobel")
-        .setCharacteristic(Characteristic.Model, "GPIO-Valve-Service")
+        .setCharacteristic(Characteristic.Model, Identifier)
         .setCharacteristic(Characteristic.SerialNumber, "GPIO" + this.pin)
         .setCharacteristic(Characteristic.FirmwareRevision, this.version);
 
@@ -110,15 +109,13 @@ Valve.prototype.initService = function () {
     this.hap.setDuration.on('change', this.changeSetDuration.bind(this));
 
     if (this.configurationFlag) {
-        //this.hap.isConfigured = this.service.addCharacteristic(Characteristic.IsConfigured);
-        //this.hap.isConfigured.updateValue(this.isAutomationActive);
         this.log("autostart at " + this.automationHours + ":" + this.automationMinutes
             + " for " + this.automationDuration + " seconds is "
             + (this.isAutomationActive ? "enabled" : "disabled") + ".");
         this.automationStarter();
     }
 
-    this.log("Valve service initialized!");
+    this.log(Identifier + " service initialized!");
 };
 
 Valve.prototype.setActive = function (on, next) {
@@ -139,16 +136,6 @@ Valve.prototype.changeActive = function () {
         this.interruptTimer();
     }
 };
-
-// Valve.prototype.changeIsConfigured = function () {
-//     this.isAutomationActive = this.hap.isConfigured.value;
-//
-//     this.hap.isConfigured.updateValue(this.isAutomationActive);
-//
-//     this.savePersistence();
-//
-//     this.log("Automatic start at " + this.automationHours + ":" + this.automationMinutes + " is " + (this.isAutomationActive? "enabled" : "disabled") + ".");
-// };
 
 Valve.prototype.changeSetDuration = function () {
     this.manualDuration = this.hap.setDuration.value;
@@ -185,20 +172,20 @@ Valve.prototype.startTimer = function (remaining) {
 Valve.prototype.interruptTimer = function () {
     this.log("timer interrupted");
     clearTimeout(this.timer);
-}
+};
 
 Valve.prototype.automationStarter = function () {
     setInterval(() => {
         let houreNow = (new Date()).getHours();
         let minuteNow = (new Date()).getMinutes();
 
-        if (houreNow == this.automationHours && minuteNow == this.automationMinutes && this.isAutomationActive) {
+        if (houreNow === this.automationHours && minuteNow === this.automationMinutes && this.isAutomationActive) {
             this.log("invoked by automation");
             this.currentDuration = this.automationDuration;
             this.hap.active.updateValue(1);
         }
     }, 60000);
-}
+};
 
 Valve.prototype.openValve = function () {
     this.gpioValve.writeSync(((!this.invertHighLow)? Gpio.HIGH : Gpio.LOW));

@@ -1,13 +1,15 @@
 let Accessory, Service, Characteristic, UUIDGen;
-let Persistence;
+let Persistence, Identifier;
 
 const Gpio = require("onoff").Gpio;
 
-module.exports = function (homebridge, persistence) {
+module.exports = function (homebridge, persistence, identifier) {
     Accessory = homebridge.platformAccessory;
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
     UUIDGen = homebridge.hap.uuid;
+
+    Identifier = identifier;
 
     return PushButton;
 };
@@ -31,7 +33,7 @@ PushButton.prototype.getServices = function () {
 PushButton.prototype.loadConfiguration = function () {
     this.name = this.config.name;
     this.pin = this.config.pin;
-    this.log("Pin: " + this.pin);
+    this.log("GPIO" + this.pin);
     this.invokeTimeout = this.config.invokeTimeout || 500;
     this.invertHighLow = this.config.invertHighLow || false;
 };
@@ -40,7 +42,7 @@ PushButton.prototype.initService = function () {
     this.informationService = new Service.AccessoryInformation();
     this.informationService
         .setCharacteristic(Characteristic.Manufacturer, "Sebastian Pobel")
-        .setCharacteristic(Characteristic.Model, "GPIO-PushButton-Service")
+        .setCharacteristic(Characteristic.Model, Identifier)
         .setCharacteristic(Characteristic.SerialNumber, "GPIO" + this.pin)
         .setCharacteristic(Characteristic.FirmwareRevision, this.version);
 
@@ -52,7 +54,7 @@ PushButton.prototype.initService = function () {
     this.hap.characteristicOn.updateValue(false);
     this.hap.characteristicOn.on('change', this.changeCharacteristicOn.bind(this));
 
-    this.log("Switch service initialized.");
+    this.log(Identifier + " service initialized.");
 };
 
 PushButton.prototype.changeCharacteristicOn = function () {
@@ -64,16 +66,16 @@ PushButton.prototype.changeCharacteristicOn = function () {
 };
 
 PushButton.prototype.switchOn = function () {
-    this.gpioValve.writeSync(((!this.invertHighLow) ? Gpio.HIGH : Gpio.LOW));
-    setTimeout(() => {this.hap.characteristicOn.updateValue(0);},this.invokeTimeout);
+    this.gpioPushButton.writeSync(((!this.invertHighLow) ? Gpio.HIGH : Gpio.LOW));
+    setTimeout(() => {this.hap.characteristicOn.updateValue(0);}, this.invokeTimeout);
 };
 
 PushButton.prototype.switchOff = function () {
-    this.gpioValve.writeSync(((!this.invertHighLow) ? Gpio.LOW : Gpio.HIGH));
+    this.gpioPushButton.writeSync(((!this.invertHighLow) ? Gpio.LOW : Gpio.HIGH));
     this.log("triggerd");
 };
 
 PushButton.prototype.initGPIO = function () {
-    this.gpioValve = new Gpio(this.pin, 'out');
-    this.gpioValve.writeSync(((!this.invertHighLow) ? Gpio.LOW : Gpio.HIGH));
+    this.gpioPushButton = new Gpio(this.pin, 'out');
+    this.gpioPushButton.writeSync(((!this.invertHighLow) ? Gpio.LOW : Gpio.HIGH));
 };

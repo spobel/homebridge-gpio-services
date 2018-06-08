@@ -11,10 +11,10 @@ module.exports = function (homebridge, persistence, identifier) {
 
     Identifier = identifier;
 
-    return Switch;
+    return GarageDoorOpener;
 };
 
-function Switch(log, config) {
+function GarageDoorOpener(log, config) {
     this.log = log;
     this.config = config;
     this.version = require("./package.json").version;
@@ -26,18 +26,22 @@ function Switch(log, config) {
     this.initService();
 }
 
-Switch.prototype.getServices = function () {
+GarageDoorOpener.prototype.getServices = function () {
     return [this.informationService, this.service];
 };
 
-Switch.prototype.loadConfiguration = function () {
+GarageDoorOpener.prototype.loadConfiguration = function () {
     this.name = this.config.name;
+
     this.pin = this.config.pin;
     this.log("GPIO" + this.pin);
+    this.pinIsOpen = this.config.pinIsOpen;
+    this.pinIsClose= this.config.pinIsClose;
+
     this.invertHighLow = this.config.invertHighLow || false;
 };
 
-Switch.prototype.initService = function () {
+GarageDoorOpener.prototype.initService = function () {
     this.informationService = new Service.AccessoryInformation();
     this.informationService
         .setCharacteristic(Characteristic.Manufacturer, "Sebastian Pobel")
@@ -45,7 +49,7 @@ Switch.prototype.initService = function () {
         .setCharacteristic(Characteristic.SerialNumber, "GPIO" + this.pin)
         .setCharacteristic(Characteristic.FirmwareRevision, this.version);
 
-    this.service = new Service.Switch(this.name);
+    this.service = new Service.GarageDoorOpener(this.name);
     this.service.isPrimaryService = true;
 
     this.hap = {};
@@ -56,7 +60,7 @@ Switch.prototype.initService = function () {
     this.log(Identifier + " service initialized.");
 };
 
-Switch.prototype.changeCharacteristicOn = function () {
+GarageDoorOpener.prototype.changeCharacteristicOn = function () {
     if (this.hap.characteristicOn.value) {
         this.switchOn();
     } else {
@@ -64,19 +68,19 @@ Switch.prototype.changeCharacteristicOn = function () {
     }
 };
 
-Switch.prototype.switchOn = function () {
+GarageDoorOpener.prototype.garageDoorOpen = function () {
     this.log("switching on...");
-    this.gpioSwitch.writeSync(((!this.invertHighLow)? Gpio.HIGH : Gpio.LOW));
+    this.gpioValve.writeSync(((!this.invertHighLow)? Gpio.HIGH : Gpio.LOW));
     this.log("switched on");
 };
 
-Switch.prototype.switchOff = function () {
+GarageDoorOpener.prototype.garageDoorClose = function () {
     this.log("switching off...");
-    this.gpioSwitch.writeSync(((!this.invertHighLow)? Gpio.LOW : Gpio.HIGH));
+    this.gpioValve.writeSync(((!this.invertHighLow)? Gpio.LOW : Gpio.HIGH));
     this.log("switched off");
 };
 
-Switch.prototype.initGPIO = function () {
-    this.gpioSwitch = new Gpio(this.pin, 'out');
-    this.gpioSwitch.writeSync(((!this.invertHighLow)? Gpio.LOW : Gpio.HIGH));
+GarageDoorOpener.prototype.initGPIO = function () {
+    this.gpioValve = new Gpio(this.pin, 'out');
+    this.gpioValve.writeSync(((!this.invertHighLow)? Gpio.LOW : Gpio.HIGH));
 };

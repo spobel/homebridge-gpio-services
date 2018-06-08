@@ -11,33 +11,33 @@ module.exports = function (homebridge, persistence, identifier) {
 
     Identifier = identifier;
 
-    return Switch;
+    return ContactSensor;
 };
 
-function Switch(log, config) {
+function ContactSensor(log, config) {
     this.log = log;
     this.config = config;
     this.version = require("./package.json").version;
 
     this.loadConfiguration();
 
-    this.initGPIO();
-
     this.initService();
+
+    this.initGPIO();
 }
 
-Switch.prototype.getServices = function () {
+ContactSensor.prototype.getServices = function () {
     return [this.informationService, this.service];
 };
 
-Switch.prototype.loadConfiguration = function () {
+ContactSensor.prototype.loadConfiguration = function () {
     this.name = this.config.name;
     this.pin = this.config.pin;
     this.log("GPIO" + this.pin);
     this.invertHighLow = this.config.invertHighLow || false;
 };
 
-Switch.prototype.initService = function () {
+ContactSensor.prototype.initService = function () {
     this.informationService = new Service.AccessoryInformation();
     this.informationService
         .setCharacteristic(Characteristic.Manufacturer, "Sebastian Pobel")
@@ -45,38 +45,33 @@ Switch.prototype.initService = function () {
         .setCharacteristic(Characteristic.SerialNumber, "GPIO" + this.pin)
         .setCharacteristic(Characteristic.FirmwareRevision, this.version);
 
-    this.service = new Service.Switch(this.name);
+    this.service = new Service.ContactSensor(this.name);
     this.service.isPrimaryService = true;
 
     this.hap = {};
-    this.hap.characteristicOn = this.service.getCharacteristic(Characteristic.On);
-    this.hap.characteristicOn.updateValue(false);
-    this.hap.characteristicOn.on('change', this.changeCharacteristicOn.bind(this));
+    this.hap.contactSensorState = this.service.getCharacteristic(Characteristic.ContactSensorState);
+    this.hap.contactSensorState.on('change', this.changeContactSensorState.bind(this));
 
     this.log(Identifier + " service initialized.");
 };
 
-Switch.prototype.changeCharacteristicOn = function () {
-    if (this.hap.characteristicOn.value) {
-        this.switchOn();
-    } else {
-        this.switchOff();
-    }
+ContactSensor.prototype.changeContactSensorState = function () {
+    this.log("" + (this.hap.contactSensorState.value ? "Contact is not detected." : "Contact is detected."));
 };
 
-Switch.prototype.switchOn = function () {
-    this.log("switching on...");
-    this.gpioSwitch.writeSync(((!this.invertHighLow)? Gpio.HIGH : Gpio.LOW));
-    this.log("switched on");
+ContactSensor.prototype.initGPIO = function () {
+    this.gpioContactSensor = new Gpio(this.pin, 'in', 'both');
+    this.gpioContactSensor.watch((err, value) => {
+        if (err) {
+        } else {
+            this.updateStatus(value);
+        }
+    });
+    this.updateStatus(this.gpioContactSensor.readSync());
 };
 
-Switch.prototype.switchOff = function () {
-    this.log("switching off...");
-    this.gpioSwitch.writeSync(((!this.invertHighLow)? Gpio.LOW : Gpio.HIGH));
-    this.log("switched off");
-};
-
-Switch.prototype.initGPIO = function () {
-    this.gpioSwitch = new Gpio(this.pin, 'out');
-    this.gpioSwitch.writeSync(((!this.invertHighLow)? Gpio.LOW : Gpio.HIGH));
+ContactSensor.prototype.updateStatus = function (value) {
+    let contactValue = (!this.invertHighLow)? 0 : 1;
+    let noContactValue = (!this.invertHighLow)? 1 : 0;
+    this.hap.contactSensorState.updateValue(value ? contactValue : noContactValue);
 };
