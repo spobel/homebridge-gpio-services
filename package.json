@@ -8,7 +8,10 @@
     "valve",
     "sprinkler",
     "faucet",
-    "shower-head"
+    "shower-head",
+    "contactsensor",
+    "switch",
+    "pushbutton"
   ],
   "repository": {
     "type": "git",

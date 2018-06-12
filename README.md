@@ -2,6 +2,10 @@
 
 Use config.json for examples.
 
+## Installation
+```
+sudo npm install homebridge-gpio-services -g --unsafe-perm
+```
 ## GPIO-ContactSensor-Service
 
 Use this accessory for contact sensor.
@@ -45,7 +49,7 @@ Use this accessory for Valve outlets. For example sprinklers.
 |valveType         | string | "GenericValve" | Sets type of Accessory. <br>("Faucet"\|"ShowerHead"\|"Sprinkler"\|"GenericValve")
 |manualDuration    | int    | 300            | Time in Seconds. Default: 300 => 5min <br>(300\|600\|900\|1200\|1500\|1800\|2100\|2400\|2700\|3000\|3300\|3600)
 |automationDateTime| string | -              | DateTime for automated irrigation. <br> Format: "HH:MM" <br> Example: 0:00 -> "00:00" 
-|automationDuration| int    | 300            | Time in Seconds for automated irrigation. <br>Default: 300 => 5min <br>(300\|600\|900\|1200\|1500\|1800\|2100\|2400\|2700\|3000\|3300\|3600)
+|automationDuration| int    | 300            | Time in Seconds for automated irrigation. <br>Default: 300 => 5min
 |isAutomationActive| bool   | false          | Activates automatic irrigation.
 
 ## Next Features
