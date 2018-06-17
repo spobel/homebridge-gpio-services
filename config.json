@@ -8,50 +8,76 @@
   "description": "This is an example configuration file with one fake accessory and one fake platform. You can use this as a template for creating your own configuration file containing devices you actually own.",
   "accessories": [
     {
-      "accessory": "GPIO-Valve-Service",
-      "name": "Sprinkler GPIO1",
-      "pin": 1,
-      "valveType": "Sprinkler"
-    }, {
-      "accessory": "GPIO-Valve-Service",
-      "name": "Faucet GPIO2",
-      "pin": 2,
-      "valveType": "Faucet",
-      "manualDuration": 600
-    }, {
-      "accessory": "GPIO-Valve-Service",
-      "name": "ShowerHead GPIO3",
-      "pin": 3,
-      "valveType": "ShowerHead"
-    }, {
-      "accessory": "GPIO-Valve-Service",
-      "name": "GenericValve GPIO4",
-      "pin": 4,
-      "valveType": "GenericValve",
+      "accessory": "GPIO-ContactSensor-Service",
+      "name": "ContactSensor GPIO10",
+      "pin": 10
+    },
+    {
+      "accessory": "GPIO-ContactSensor-Service",
+      "name": "ContactSensor GPIO11",
+      "pin": 11,
       "invertHighLow": true
-    }, {
+    },
+
+
+    {
+      "accessory": "GPIO-PushButton-Service",
+      "name": "GenericValve GPIO20",
+      "pin": 20
+    },
+    {
+      "accessory": "GPIO-PushButton-Service",
+      "name": "GenericValve GPIO21",
+      "pin": 21,
+      "invertHighLow": true,
+      "invokeTimeout": 1000
+    },
+
+
+
+    {
       "accessory": "GPIO-Switch-Service",
-      "name": "GenericValve GPIO5",
-      "pin": 5,
+      "name": "GenericValve GPIO30",
+      "pin": 30,
       "manualDuration": 1800,
       "automationDateTime": "00:01",
       "automationDuration": 600,
       "isAutomationActive": true
-    }, {
+    },
+    {
       "accessory": "GPIO-Switch-Service",
-      "name": "GenericValve GPIO6",
-      "pin": 6,
+      "name": "GenericValve GPIO31",
+      "pin": 31,
       "invertHighLow": true
-    }, {
-      "accessory": "GPIO-PushButton-Service",
-      "name": "GenericValve GPIO7",
-      "pin": 7
-    }, {
-      "accessory": "GPIO-PushButton-Service",
-      "name": "GenericValve GPIO8",
-      "pin": 8,
-      "invertHighLow": true,
-      "invokeTimeout": 1000
+    },
+
+
+
+    {
+      "accessory": "GPIO-Valve-Service",
+      "name": "Sprinkler GPIO41",
+      "pin": 41,
+      "valveType": "Sprinkler"
+    },
+    {
+      "accessory": "GPIO-Valve-Service",
+      "name": "Faucet GPIO42",
+      "pin": 42,
+      "valveType": "Faucet",
+      "manualDuration": 600
+    },
+    {
+      "accessory": "GPIO-Valve-Service",
+      "name": "ShowerHead GPIO43",
+      "pin": 43,
+      "valveType": "ShowerHead"
+    },
+    {
+      "accessory": "GPIO-Valve-Service",
+      "name": "GenericValve GPIO44",
+      "pin": 44,
+      "valveType": "GenericValve",
+      "invertHighLow": true
     }
   ]
 }
