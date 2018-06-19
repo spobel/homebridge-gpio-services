@@ -2,11 +2,11 @@ module.exports = function (homebridge) {
     let ValvePersistence = require("./persistence.js");
 
     let ContactSensor = require("./lib/accessories/contactsensor.js");
-    let ContactSensorIdentifier = "GPIO-ContactSensor-Service";
+
     homebridge.registerAccessory(
         "homebridge-gpio-services",
-        ContactSensorIdentifier,
-        ContactSensor(homebridge, ContactSensorIdentifier),
+        "GPIO-ContactSensor-Service",
+        ContactSensor(homebridge, "GPIO-ContactSensor-Service"),
         true);
 
     let PushButton = require("./lib/accessories/pushbutton.js");
