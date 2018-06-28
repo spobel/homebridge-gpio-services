@@ -6,6 +6,25 @@ Use config.json for examples.
 ```
 sudo npm install homebridge-gpio-services -g --unsafe-perm
 ```
+
+## GPIO-Door-Service
+
+Use this accessory for motorized door.
+
+| Attribute               | Type   | Default | Description 
+|-------------------------|--------|---------|-------------
+|name                     | string | -       | Name of Accessory
+|pin                      | int    | -       | GPIO pin number for engine open.
+|invertHighLow            | bool   | false   | Set to true if pin outlet has to be inverted.
+|timeOpen                 | int    | -       | Time needed to open in ms.
+|pinClose                 | int    | -       | GPIO pin number for engine close.
+|invertHighLowClose       | bool   | false   | Set to true if pinClose outlet has to be inverted.
+|timeClose                | int    | -       | Time needed to close in ms.
+|pinContactOpen           | int    | -       | GPIO pin number for contact open.
+|invertHighLowContactOpen | bool   | false   | Set to true if pinContactOpen outlet has to be inverted.
+|pinContactClose          | int    | -       | GPIO pin number for contact close.
+|invertHighLowContactClose| bool   | false   | Set to true if pinContactClose outlet has to be inverted.
+
 ## GPIO-ContactSensor-Service
 
 Use this accessory for contact sensor.
@@ -52,10 +71,44 @@ Use this accessory for Valve outlets. For example sprinklers.
 |automationDuration| int    | 300            | Time in Seconds for automated irrigation. <br>Default: 300 => 5min
 |isAutomationActive| bool   | false          | Activates automatic irrigation.
 
+## GPIO-Window-Service
+
+Use this accessory for motorized window.
+
+| Attribute               | Type   | Default | Description 
+|-------------------------|--------|---------|-------------
+|name                     | string | -       | Name of Accessory
+|pin                      | int    | -       | GPIO pin number for engine open.
+|invertHighLow            | bool   | false   | Set to true if pin outlet has to be inverted.
+|timeOpen                 | int    | -       | Time needed to open in ms.
+|pinClose                 | int    | -       | GPIO pin number for engine close.
+|invertHighLowClose       | bool   | false   | Set to true if pinClose outlet has to be inverted.
+|timeClose                | int    | -       | Time needed to close in ms.
+|pinContactOpen           | int    | -       | GPIO pin number for contact open.
+|invertHighLowContactOpen | bool   | false   | Set to true if pinContactOpen outlet has to be inverted.
+|pinContactClose          | int    | -       | GPIO pin number for contact close.
+|invertHighLowContactClose| bool   | false   | Set to true if pinContactClose outlet has to be inverted.
+
+## GPIO-WindowCovering-Service
+
+Use this accessory for motorized window covering.
+
+| Attribute               | Type   | Default | Description 
+|-------------------------|--------|---------|-------------
+|name                     | string | -       | Name of Accessory
+|pin                      | int    | -       | GPIO pin number for engine open.
+|invertHighLow            | bool   | false   | Set to true if pin outlet has to be inverted.
+|timeOpen                 | int    | -       | Time needed to open in ms.
+|pinClose                 | int    | -       | GPIO pin number for engine close.
+|invertHighLowClose       | bool   | false   | Set to true if pinClose outlet has to be inverted.
+|timeClose                | int    | -       | Time needed to close in ms.
+|pinContactOpen           | int    | -       | GPIO pin number for contact open.
+|invertHighLowContactOpen | bool   | false   | Set to true if pinContactOpen outlet has to be inverted.
+|pinContactClose          | int    | -       | GPIO pin number for contact close.
+|invertHighLowContactClose| bool   | false   | Set to true if pinContactClose outlet has to be inverted.
+
 ## Next Features
 
 * GPIO-GarageDoorOpener-Service: new Service
 * GPIO-Doorbell-Service: new Service
 * GPIO-StatelessProgrammableSwith-Service: new Service
-* GPIO-Window-Service: new Service
-* GPIO-WindowCovering-Service: new Service
