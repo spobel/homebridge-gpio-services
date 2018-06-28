@@ -1,5 +1,5 @@
 module.exports = function (homebridge) {
-    let ValvePersistence = require("./persistence.js");
+    let Persistence = require("./persistence.js");
 
     let ContactSensor = require("./lib/accessories/contactsensor.js");
 
@@ -30,6 +30,14 @@ module.exports = function (homebridge) {
     homebridge.registerAccessory(
         "homebridge-gpio-services",
         ValveIdentifier,
-        Valve(homebridge, ValveIdentifier, ValvePersistence),
+        Valve(homebridge, ValveIdentifier, Persistence),
+        true);
+
+    let WindowCovering = require("./lib/accessories/windowcovering.js");
+    let WindowCoveringIdentifier = "GPIO-WindowCovering-Service";
+    homebridge.registerAccessory(
+        "homebridge-gpio-services",
+        WindowCoveringIdentifier,
+        WindowCovering(homebridge, WindowCoveringIdentifier),
         true);
 }
