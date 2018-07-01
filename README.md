@@ -21,11 +21,12 @@ Install Homebridge:
 sudo npm install homebridge -g --unsafe-perm
 ```
 
-Install this plugin:~
+Install this plugin:
 ```
 sudo npm install homebridge-gpio-services -g --unsafe-perm
 ```
 
+<!--
 ## GPIO-Door-Service
 
 Use this accessory for motorized door.
@@ -43,10 +44,11 @@ Use this accessory for motorized door.
 |invertHighLowContactOpen | bool   | false   | Set to true if pinContactOpen outlet has to be inverted.
 |pinContactClose          | int    | -       | GPIO pin number for contact close.
 |invertHighLowContactClose| bool   | false   | Set to true if pinContactClose outlet has to be inverted.
+-->
 
 ## GPIO-ContactSensor-Service
 
-Use this accessory for contact sensor.
+Use this accessory for contact sensor. You can change the type of contact sensor in iOS (Window\|ContactSensor\|Garagedoor\|Covering\|Door).
 
 | Attribute    | Type   | Default | Description 
 |--------------|--------|---------|-------------
@@ -56,7 +58,7 @@ Use this accessory for contact sensor.
 
 ## GPIO-PushButton-Service
 
-Use this accessory for push button. Switch will turn off after invokeTimeout.
+Use this accessory for push button. Switch will turn off automatically after invokeTimeout.
 
 | Attribute    | Type   | Default | Description 
 |--------------|--------|---------|-------------
@@ -90,6 +92,9 @@ Use this accessory for Valve outlets. For example sprinklers.
 |automationDuration| int    | 300            | Time in Seconds for automated irrigation. <br>Default: 300 => 5min
 |isAutomationActive| bool   | false          | Activates automatic irrigation.
 
+HomeKit shows different icons for faucet and sprinkler in iOS 11.4. Shower head and generic valve will be shown as faucet in home app. Perhaps there will be different icons in future.
+
+<!--
 ## GPIO-Window-Service
 
 Use this accessory for motorized window.
@@ -125,15 +130,16 @@ Use this accessory for motorized window covering.
 |invertHighLowContactOpen | bool   | false   | Set to true if pinContactOpen outlet has to be inverted.
 |pinContactClose          | int    | -       | GPIO pin number for contact close.
 |invertHighLowContactClose| bool   | false   | Set to true if pinContactClose outlet has to be inverted.
-
+-->
 
 ## GPIO
 
-To configurate GPIO at startup:
+To activate GPIO configuration at startup you have to add a script like the following:
+(You will need this to avoid wrong default values at boot time.)
 ```
 sudo nano /etc/init.d/gpio
 ```
-Insert following:
+Script content :
 ```
 #!/bin/sh
 ### BEGIN INIT INFO
@@ -211,8 +217,24 @@ sudo update-rc.d gpio defaults
 sudo update-rc.d gpio enable
 ```
 
+## Changelog
+
+### v 1.0.5
+
++ Readme.md: added installation Guide
++ Readme.md: added GPIO startup Guide
++ fixing bugs in Valve
++ added GPIO Debugger for development
++ refactoring accessories and gpio actuators
+
 ## Next Features
 
-* GPIO-GarageDoorOpener-Service: new Service
-* GPIO-Doorbell-Service: new Service
-* GPIO-StatelessProgrammableSwith-Service: new Service
+* v 1.1.0 :
+    - GPIO-Door-Service
+    - GPIO-Window-Service
+    - GPIO-WindowCovering-Service
+* v 1.2.0 :
+    - GPIO-GarageDoorOpener-Service: new Service
+* future:
+    - GPIO-Doorbell-Service: new Service
+    - GPIO-StatelessProgrammableSwitch-Service: new Service
