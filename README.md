@@ -3,6 +3,25 @@
 Use config.json for examples.
 
 ## Installation
+
+You need to install gcc 4.9 and g++ 4.9 as your default gcc and g++:
+```
+sudo apt-get install gcc-4.9 g++-4.9
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
+```
+
+Install nodejs and npm:
+```
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+Install Homebridge:
+```
+sudo npm install homebridge -g --unsafe-perm
+```
+
+Install this plugin:~
 ```
 sudo npm install homebridge-gpio-services -g --unsafe-perm
 ```
@@ -106,6 +125,91 @@ Use this accessory for motorized window covering.
 |invertHighLowContactOpen | bool   | false   | Set to true if pinContactOpen outlet has to be inverted.
 |pinContactClose          | int    | -       | GPIO pin number for contact close.
 |invertHighLowContactClose| bool   | false   | Set to true if pinContactClose outlet has to be inverted.
+
+
+## GPIO
+
+To configurate GPIO at startup:
+```
+sudo nano /etc/init.d/gpio
+```
+Insert following:
+```
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          gpio
+# Required-Start:    $remote_fs dbus
+# Required-Stop:     $remote_fs dbus
+# Should-Start:      $syslog
+# Should-Stop:       $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Enable GPIO
+# Description:       Enable GPIO
+### END INIT INFO
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DESC="Enable GPIO for the Module"
+NAME="gpio"
+SCRIPTNAME=/etc/init.d/$NAME
+
+. /lib/lsb/init-functions
+
+case "$1" in
+    start)
+        log_daemon_msg "Enabling GPIO"
+        success=0
+
+    #Relais 1 Switch example at GPIO26
+    if [ ! -e /sys/class/gpio/gpio26 ] ; then
+        echo 26 > /sys/class/gpio/export
+        success=$?
+        echo out > /sys/class/gpio/gpio26/direction
+        echo 1 > /sys/class/gpio/gpio26/value
+    fi
+    
+    #Relais 2 Switch example at GPIO19
+    if [ ! -e /sys/class/gpio/gpio19 ] ; then
+        echo 19 > /sys/class/gpio/export
+        success=$?
+        echo out > /sys/class/gpio/gpio19/direction
+        echo 1 > /sys/class/gpio/gpio19/value
+    fi
+    
+    #Sensor 1 GPIO17
+    if [ ! -e /sys/class/gpio/gpio17 ] ; then
+         echo 17 > /sys/class/gpio/export
+         success=$?
+         echo in > /sys/class/gpio/gpio17/direction
+    fi
+    
+    #Sensor 2 GPIO27
+    if [ ! -e /sys/class/gpio/gpio27 ] ; then
+        echo 27 > /sys/class/gpio/export
+        success=$?
+        echo in > /sys/class/gpio/gpio27/direction
+    fi
+    
+    log_end_msg $success
+    ;;
+    *)
+    echo "Usage: $SCRIPTNAME {start}" >&2
+    exit 1
+    ;;
+esac
+
+exit 0
+```
+
+Add script to startup:
+
+```
+sudo chmod +x /etc/init.d/gpio
+sudo chown root:root /etc/init.d/gpio
+
+sudo update-rc.d gpio defaults
+sudo update-rc.d gpio enable
+```
 
 ## Next Features
 
