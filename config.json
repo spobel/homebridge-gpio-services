@@ -19,7 +19,6 @@
       "invertHighLow": true
     },
 
-
     {
       "accessory": "GPIO-PushButton-Service",
       "name": "GenericValve GPIO20",
@@ -32,8 +31,6 @@
       "invertHighLow": true,
       "invokeTimeout": 1000
     },
-
-
 
     {
       "accessory": "GPIO-Switch-Service",
@@ -50,8 +47,6 @@
       "pin": 31,
       "invertHighLow": true
     },
-
-
 
     {
       "accessory": "GPIO-Valve-Service",
