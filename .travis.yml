@@ -1,7 +1,6 @@
 deploy:
   provider: npm
   email: "$NPM_EMAIL"
-  skip_cleanup: true
   api_key: "$NPM_TOKEN"
   on:
     repo: master
