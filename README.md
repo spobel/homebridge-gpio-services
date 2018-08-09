@@ -300,13 +300,13 @@ sudo update-rc.d gpio enable
 
 ## Changelog
 
-### v 1.1.0 :
+### [1.1.0]
 + GPIO-Door-Service: added (BETA)
 + GPIO-Window-Service: added (BETA)
 + GPIO-WindowCovering-Service: added (BETA)
 + Readme.md: adding optional tag for all services
 
-### v 1.0.5
+### [1.0.5]
 + Readme.md: added installation Guide
 + Readme.md: added GPIO startup Guide
 + fixing bugs in Valve
@@ -317,7 +317,6 @@ sudo update-rc.d gpio enable
 
 - PushButton mode for GPIO-Door-Service, GPIO-Window-Service, GPIO-WindowCovering-Service
 - finish BETA for GPIO-Door-Service, GPIO-Window-Service, GPIO-WindowCovering-Service
-
 
 - GPIO-GarageDoorOpener-Service: new Service
 - GPIO-Doorbell-Service: new Service
