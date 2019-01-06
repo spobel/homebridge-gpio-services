@@ -31,49 +31,6 @@ Install this plugin:
 sudo npm install homebridge-gpio-services -g --unsafe-perm
 ```
 
-## GPIO-Door-Service (BETA)
-
-Use this accessory for motorized door. (NOT TESTED)
-
-| Attribute               | Type   | Optional | Default               | Description 
-|-------------------------|--------|----------|-----------------------|-------------
-|name                     | string | [ ]      | -                     | Name of Accessory
-|pin                      | int    | [x]      | -                     | GPIO pin number for engine open/close/stop.
-|invertHighLow            | bool   | [x]      | false                 | Set to true if pin outlet has to be inverted.
-|mode                     | string | [x]      | "OpenClosePushButton" | Mode ("OpenClosePushButton"\|"OpenCloseSwitch")
-|timeOpen                 | int    | [ ]      | -                     | Time needed to open in ms.
-|timeClose                | int    | [ ]      | -                     | Time needed to close in ms.
-|pinOpen                  | int    | [x]      | -                     | GPIO pin number for engine open.
-|invertHighLowOpen        | bool   | [x]      | false                 | Set to true if pinOpen outlet has to be inverted.
-|pinClose                 | int    | [x]      | -                     | GPIO pin number for engine close.
-|invertHighLowClose       | bool   | [x]      | false                 | Set to true if pinClose outlet has to be inverted.
-|pinContactOpen           | int    | [x]      | -                     | GPIO pin number for contact open.
-|invertHighLowContactOpen | bool   | [x]      | false                 | Set to true if pinContactOpen outlet has to be inverted.
-|pinContactClose          | int    | [x]      | -                     | GPIO pin number for contact close.
-|invertHighLowContactClose| bool   | [x]      | false                 | Set to true if pinContactClose outlet has to be inverted.
-|startDefaultPosition     | int    | [x]      | 50                    | Value for position after restart (0-100).
-
-Choose mode:
-- OpenClosePushButton: 
-    - If you have one push button of each for opening and closing door.
-    - pinOpen (not optional)
-    - pinClose (not optional)
-    - BETA (not tested)
-- OpenCloseSwitch:
-    - If you have one switch of each for opening and closing door.
-    - pinOpen (not optional)
-    - pinClose (not optional)
-    - BETA (not tested)
-<!--
-    - StartStopPushButton: 
-    - If you have one push button for opening, closing and stop door.
-    - pin (not optional)
-    - BETA (not implemented) -->
-
-You do not need a contact for status open or close. If you have one, it will detect status after restart homebridge and 
-it will detect when it is in min or max position. It is possible to connect one contact only.
-
-
 ## GPIO-ContactSensor-Service
 
 Use this accessory for contact sensor. You can change the type of contact sensor in iOS (Window\|ContactSensor\|Garagedoor\|Covering\|Door).
@@ -124,93 +81,6 @@ Use this accessory for Valve outlets. For example sprinklers.
 |isAutomationActive| [x]      | bool   | false          | Activates automatic irrigation.
 
 HomeKit shows different icons for faucet and sprinkler in iOS 11.4. Shower head and generic valve will be shown as faucet in home app. Perhaps there will be different icons in future.
-
-
-## GPIO-Window-Service (BETA)
-
-Use this accessory for motorized window. (NOT TESTED)
-
-| Attribute               | Type   | Optional | Default               | Description 
-|-------------------------|--------|----------|-----------------------|-------------
-|name                     | string | [ ]      | -                     | Name of Accessory
-|pin                      | int    | [x]      | -                     | GPIO pin number for engine open/close/stop.
-|invertHighLow            | bool   | [x]      | false                 | Set to true if pin outlet has to be inverted.
-|mode                     | string | [x]      | "OpenClosePushButton" | Mode ("OpenClosePushButton"\|"OpenCloseSwitch")
-|timeOpen                 | int    | [ ]      | -                     | Time needed to open in ms.
-|timeClose                | int    | [ ]      | -                     | Time needed to close in ms.
-|pinOpen                  | int    | [x]      | -                     | GPIO pin number for engine open.
-|invertHighLowOpen        | bool   | [x]      | false                 | Set to true if pinOpen outlet has to be inverted.
-|pinClose                 | int    | [x]      | -                     | GPIO pin number for engine close.
-|invertHighLowClose       | bool   | [x]      | false                 | Set to true if pinClose outlet has to be inverted.
-|pinContactOpen           | int    | [x]      | -                     | GPIO pin number for contact open.
-|invertHighLowContactOpen | bool   | [x]      | false                 | Set to true if pinContactOpen outlet has to be inverted.
-|pinContactClose          | int    | [x]      | -                     | GPIO pin number for contact close.
-|invertHighLowContactClose| bool   | [x]      | false                 | Set to true if pinContactClose outlet has to be inverted.
-|startDefaultPosition     | int    | [x]      | 50                    | Value for position after restart (0-100).
-
-Chose mode:
-- OpenClosePushButton: 
-    - If you have one push button of each for opening and closing door.
-    - pinOpen (not optional)
-    - pinClose (not optional)
-    - BETA (not tested)
-- OpenCloseSwitch:
-    - If you have one switch of each for opening and closing door.
-    - pinOpen (not optional)
-    - pinClose (not optional)
-    - BETA (not tested)
-<!--
-    - StartStopPushButton: 
-    - If you have one push button for opening, closing and stop door.
-    - pin (not optional)
-    - BETA (not implemented)-->
-
-You do not need a contact for status open or close. If you have one, it will detect status after restart homebridge and 
-it will detect when it is in min or max position. It is possible to connect one contact only.
-
-
-## GPIO-WindowCovering-Service (BETA)
-
-Use this accessory for motorized window covering. (NOT TESTED)
-
-| Attribute               | Type   | Optional | Default               | Description 
-|-------------------------|--------|----------|-----------------------|-------------
-|name                     | string | [ ]      | -                     | Name of Accessory
-|pin                      | int    | [x]      | -                     | GPIO pin number for engine open/close/stop.
-|invertHighLow            | bool   | [x]      | false                 | Set to true if pin outlet has to be inverted.
-|mode                     | string | [x]      | "OpenClosePushButton" | Mode ("OpenClosePushButton"\|"OpenCloseSwitch")
-|timeOpen                 | int    | [ ]      | -                     | Time needed to open in ms.
-|timeClose                | int    | [ ]      | -                     | Time needed to close in ms.
-|pinOpen                  | int    | [x]      | -                     | GPIO pin number for engine open.
-|invertHighLowOpen        | bool   | [x]      | false                 | Set to true if pinOpen outlet has to be inverted.
-|pinClose                 | int    | [x]      | -                     | GPIO pin number for engine close.
-|invertHighLowClose       | bool   | [x]      | false                 | Set to true if pinClose outlet has to be inverted.
-|pinContactOpen           | int    | [x]      | -                     | GPIO pin number for contact open.
-|invertHighLowContactOpen | bool   | [x]      | false                 | Set to true if pinContactOpen outlet has to be inverted.
-|pinContactClose          | int    | [x]      | -                     | GPIO pin number for contact close.
-|invertHighLowContactClose| bool   | [x]      | false                 | Set to true if pinContactClose outlet has to be inverted.
-|startDefaultPosition     | int    | [x]      | 50                    | Value for position after restart (0-100).
-
-Chose mode:
-- OpenClosePushButton: 
-    - If you have one push button of each for opening and closing door.
-    - pinOpen (not optional)
-    - pinClose (not optional)
-    - BETA (not tested)
-- OpenCloseSwitch:
-    - If you have one switch of each for opening and closing door.
-    - pinOpen (not optional)
-    - pinClose (not optional)
-    - BETA (not tested)
-<!--
-    - StartStopPushButton: 
-    - If you have one push button for opening, closing and stop door.
-    - pin (not optional)
-    - BETA (not implemented) -->
-
-You do not need a contact for status open or close. If you have one, it will detect status after restart homebridge and 
-it will detect when it is in min or max position. It is possible to connect one contact only.
-
 
 ## GPIO
 
@@ -300,11 +170,8 @@ sudo update-rc.d gpio enable
 
 ## Changelog
 
-### [1.1.0]
-+ GPIO-Door-Service: added (BETA)
-+ GPIO-Window-Service: added (BETA)
-+ GPIO-WindowCovering-Service: added (BETA)
-+ Readme.md: adding optional tag for all services
+### [1.0.6]
++ fixing dependencies
 
 ### [1.0.5]
 + Readme.md: added installation Guide
@@ -315,9 +182,4 @@ sudo update-rc.d gpio enable
 
 ## Next Features
 
-- PushButton mode for GPIO-Door-Service, GPIO-Window-Service, GPIO-WindowCovering-Service
-- finish BETA for GPIO-Door-Service, GPIO-Window-Service, GPIO-WindowCovering-Service
-
 - GPIO-GarageDoorOpener-Service: new Service
-- GPIO-Doorbell-Service: new Service
-- GPIO-StatelessProgrammableSwitch-Service: new Service
