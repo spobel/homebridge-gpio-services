@@ -8,13 +8,13 @@ module.exports = function (homebridge) {
         ContactSensor(homebridge, "GPIO-ContactSensor-Service"),
         true);
 
-    /*let Door = require("./lib/accessories/motorized_open_close.js");
-    let DoorIdentifier = "GPIO-Door-Service";
-    homebridge.registerAccessory(
-        "homebridge-gpio-services",
-        DoorIdentifier,
-        Door(homebridge, DoorIdentifier),
-        true);*/
+    // let Door = require("./lib/accessories/motorized_open_close.js");
+    // let DoorIdentifier = "GPIO-Door-Service";
+    // homebridge.registerAccessory(
+    //     "homebridge-gpio-services",
+    //     DoorIdentifier,
+    //     Door(homebridge, DoorIdentifier),
+    //     true);
 
     let PushButton = require("./lib/accessories/pushbutton.js");
     let PushButtonIdentifier = "GPIO-PushButton-Service";
@@ -40,19 +40,19 @@ module.exports = function (homebridge) {
         Valve(homebridge, ValveIdentifier, Persistence),
         true);
 
-    /*let Window = require("./lib/accessories/motorized_open_close.js");
-    let WindowIdentifier = "GPIO-Window-Service";
-    homebridge.registerAccessory(
-        "homebridge-gpio-services",
-        WindowIdentifier,
-        Window(homebridge, WindowIdentifier),
-        true);
-
-    let WindowCovering = require("./lib/accessories/motorized_open_close.js");
-    let WindowCoveringIdentifier = "GPIO-WindowCovering-Service";
-    homebridge.registerAccessory(
-        "homebridge-gpio-services",
-        WindowCoveringIdentifier,
-        WindowCovering(homebridge, WindowCoveringIdentifier),
-        true);*/
+    // let Window = require("./lib/accessories/motorized_open_close.js");
+    // let WindowIdentifier = "GPIO-Window-Service";
+    // homebridge.registerAccessory(
+    //     "homebridge-gpio-services",
+    //     WindowIdentifier,
+    //     Window(homebridge, WindowIdentifier),
+    //     true);
+    //
+    // let WindowCovering = require("./lib/accessories/motorized_open_close.js");
+    // let WindowCoveringIdentifier = "GPIO-WindowCovering-Service";
+    // homebridge.registerAccessory(
+    //     "homebridge-gpio-services",
+    //     WindowCoveringIdentifier,
+    //     WindowCovering(homebridge, WindowCoveringIdentifier),
+    //     true);
 };
